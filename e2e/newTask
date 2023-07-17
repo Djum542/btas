@@ -1,0 +1,58 @@
+/**
+* @description User create task
+*   case 1: LINE 22 - Work time is invalid
+*   case 1: LINE 22 - Work time is valid
+* */
+
+const {
+    scrollTo,
+    enterInput,
+    tapId,
+    tapText,
+    swipe,
+    expectIdToHaveText
+} = require("./step-definition")
+
+describe('Create task', () => {
+    beforeEach(async () => {
+        await device.launchApp();
+    });
+
+    it('LINE 22 - Work time is invalid', async () => {
+        await enterInput('phoneNumber_input', '397411511')
+        await enterInput('password_input', '19111998qq')
+        await tapId('login_btn')
+        await tapId('navigate_listJob')
+        await tapId('navigate_newJob')
+        await tapId('duration_2')
+        await tapId('duration_3')
+        await tapId('duration_4')
+        await scrollTo('scroll_view', 'bottom')
+        await tapId('cook')
+        await tapId('ironing')
+        await tapId('tools')
+        await tapId('choose_people')
+        await tapId('pet')
+        await tapId('lovely')
+        await tapId('navigate_workTime')
+        await tapText('23')
+        await element(by.id('timePicker')).swipe('down', 'fast', 0.9, 0.2, 0.9);
+        await swipe('timePicker', 'down')
+        await element(by.id('timePicker')).swipe('down', 'fast', 0.9, 0.9, 0.9);
+        await enterInput('address', '60 Bui Xuong Tu, Cam Le, Da Nang')
+        await enterInput('note', 'Don dep nha kho')
+        await tapId('navigate_infoJob')
+        await expectIdToHaveText('error', 'Thời gian làm việc đã qua. Vui lòng chọn lại!')
+    })
+
+    it('LINE 50 - Work time is valid', async () => {
+        await tapText('29')
+        await element(by.id('timePicker')).swipe('down', 'fast', 0.9, 0.2, 0.9);
+        await swipe('timePicker', 'down')
+        await element(by.id('timePicker')).swipe('down', 'fast', 0.9, 0.9, 0.9);
+        await tapId('navigate_infoJob')
+        await scrollTo('scroll_infoJob', 'bottom')
+        await tapId('createJob')
+        await tapText('OK')
+    })
+})

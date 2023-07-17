@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "137297420245",
+    "project_id": "btas-demo",
+    "storage_bucket": "btas-demo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:137297420245:android:d77f8596c40a0e786d675c",
+        "android_client_info": {
+          "package_name": "com.btasdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "137297420245-eo9ivhsiqmefe96rh8tutoq92b6ioi6n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.btasdemo",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "137297420245-tlj2ugo468bdk2nba1g92b4hkj9c6d7v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYWbg0AVQPNmpPk8fZTTH3IcSXTadbwuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "137297420245-tlj2ugo468bdk2nba1g92b4hkj9c6d7v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "137297420245-1hhd75s47l8uhmodufj87mq5hr0mv8hu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bTasDemo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

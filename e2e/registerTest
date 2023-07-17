@@ -1,0 +1,82 @@
+/**
+* @description Register account (3 test cases)
+*   case 1: LINE 20 - Phone number exit in database
+*   case 2: LINE 63 - Verify code not valid
+*   case 3: LINE 93 - Phone number and verify code is valid
+* */
+
+const {
+    clearTextInput,
+    enterInput,
+    tapId,
+    tapText,
+    waitForElement
+} = require("./step-definition")
+
+describe('Register account', () => {
+    beforeEach(async () => {
+        await device.launchApp()
+    });
+
+    it('case 1: LINE 20 - Phone number exit in database', async () => {
+        await tapId('navigate_register_btn')
+        await tapText('Rất vui được gặp bạn')
+        await tapText('Tạo ngay tài khoản để trải nghiệm dịch vụ.')
+        await tapText('Họ và tên')
+        await enterInput('name_input', 'Nguyen Van Quan')
+        await tapText('Số điện thoại')
+        await tapId('chooseCountryCode')
+        await tapId('choose_th_btn')
+        await tapId('chooseCountryCode')
+        await tapId('choose_hk_btn')
+        await tapId('chooseCountryCode')
+        await tapId('choose_us_btn')
+        await tapId('chooseCountryCode')
+        await tapId('choose_vn_btn')
+        await enterInput('phoneNumber_input', '397411511')
+        await tapText('Email')
+        await enterInput('mail_input', 'nvquan.itdn@gmail.com')
+        await tapText('Mã giới thiệu')
+        await enterInput('verify_input', 'abcxyz')
+        await tapId('navigate_verify_page')
+    })
+
+    it('case 2: LINE 43 - Verify code is invalid', async () => {
+        // await tapText('Rất vui được gặp bạn')
+        // await tapText('Tạo ngay tài khoản để trải nghiệm dịch vụ.')
+        // await tapText('Họ và tên')
+        // await clearTextInput('name_input')
+        // await enterInput('name_input', 'Nguyen Van A')
+        // await tapText('Số điện thoại')
+        // await tapId('chooseCountryCode')
+        // await tapId('choose_th_btn')
+        // await tapId('chooseCountryCode')
+        // await tapId('choose_hk_btn')
+        // await tapId('chooseCountryCode')
+        // await tapId('choose_us_btn')
+        // await tapId('chooseCountryCode')
+        // await tapId('choose_vn_btn')
+        await clearTextInput('phoneNumber_input')
+        await enterInput('phoneNumber_input', '123456789')
+        await tapText('Email')
+        await clearTextInput('mail_input')
+        await enterInput('mail_input', 'user.test@gmail.com')
+        await tapText('Mã giới thiệu')
+        await clearTextInput('verify_input')
+        await enterInput('verify_input', 'abcxyz')
+        await tapId('navigate_verify_page')
+        await waitForElement('verifyCode_input',10000);
+        await tapId('verify_btn');
+        // .withTimeout
+        // await tapText('Nhận mã kích hoạt gồm 6 chữ số đã được gửi đến số điện thoại của bạn.')
+        // await enterInput('verifyCode_input', '123454')
+        // await tapId('verify_btn')
+    })
+
+    // it('', async () => {
+    //     await clearTextInput('verifyCode_input')
+    //     await enterInput('verifyCode_input', '123446')
+    //     await tapId('verify_btn')
+
+    // })
+})

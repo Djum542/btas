@@ -1,0 +1,175 @@
+/**
+* @description Asker change date time AC task (3 test cases)
+*   case 1: LINE 33 - Asker want to change task datetime - POSTED
+*   case 2: LINE 63 - Asker want to change task datetime - WAITING
+*   case 3: LINE 93 - Asker want to change task datetime - CONFIRMED
+* */
+const {
+  initData,
+  loginWithPhoneAndPassword,
+  tapId,
+  tapText,
+  expectIdToHaveText,
+  expectElementVisible,
+  selectTime24h,
+  swipe,
+  postTask,
+  waitForElement,
+  typePromotionCode,
+  expectIdToHaveTextAtIndex,
+  tapIdAtIndex,
+} = require('../../step-definition');
+const moment = require('moment');
+const expect = require('chai').expect;
+
+describe('FILE: flow-test/air-conditioner/update-date-time/asker-change-date-time.spec.js - Change datetime Deep Cleaning task', () => {
+  beforeEach(async () => {
+    // await initData('service/initDeepCleaningService', {});
+    await initData('user/createUser', [
+      {Phone: '0834567890', Name: 'Asker', Type: 'ASKER', Status: 'ACTIVE'},
+      {Phone: '0834567891', Name: 'Tasker 01', Type: 'TASKER', Status: 'ACTIVE'},
+      {Phone: '0834567892', Name: 'Tasker 02', Type: 'TASKER', Status: 'ACTIVE'},
+      {Phone: '0834567893', Name: 'Tasker 03', Type: 'TASKER', Status: 'ACTIVE'},
+    ]);
+    await device.reloadReactNative();
+    await loginWithPhoneAndPassword('0834567890', '123456');
+  });
+  it('LINE 37 - AC Asker want to change task datetime - POSTED', async () => { // TODO: Run on Android
+    if (device.getPlatform() === 'ios') {
+      await initData('task/createACTask', [
+        { ServiceName: 'Vệ sinh máy lạnh', AskerPhone: '0834567890', Description: 'My Task', Detail: 'Split,0,2,1,clean_gas,200000', Cost: 200000 },
+      ]);
+      await tapText('Hoạt động');
+      await expectIdToHaveText('serviceNameMy Task', 'Vệ sinh máy lạnh');
+      await tapId('taskMy Task');
+      await expectElementVisible( 'Đang chờ người nhận việc...', 'text');
+      await tapText('Cập nhật');
+      await expectElementVisible('Đổi ngày giờ', 'text');
+      await selectTime24h(22);
+      await tapText('Đồng ý');
+      await tapId('btnUpdateDateTime');
+      await waitForElement('Vui lòng chọn giờ làm khác. bTas chỉ hỗ trợ công việc từ 06:00 đến 23:00 hàng ngày.', 500, 'text');
+      await tapText('Đóng');
+      await selectTime24h(16, 22);
+      await tapText('Đồng ý');
+      await tapId('btnUpdateDateTime');
+      await waitForElement('Cập nhật thời gian làm việc thành công.', 500, 'text');
+      await tapText('Đóng');
+      await tapId('taskMy Task');
+      await expectElementVisible( 'Đang chờ người nhận việc...', 'text');
+      await expectIdToHaveText('txtTaskDetail', 'Chi tiết công việc');
+      await expectIdToHaveText('quantityAC_Split', '1');
+    }
+  });
+
+  it('LINE 65 - Asker want to change task datetime - WAITING', async () => {  // TODO: Run on Android
+    if (device.getPlatform() === 'ios') {
+      await initData('task/createACTask', [
+        { ServiceName: 'Vệ sinh máy lạnh', AskerPhone: '0834567890', Description: 'My Task', Detail: 'Split,0,2,1,clean_gas,200000', Cost: 200000 },
+      ]);
+      await initData('task/updateTask', [
+        {Status: 'WAITING_ASKER_CONFIRMATION', Description: 'My Task', AcceptedTasker: '0834567891'},
+      ]);
+      await tapText('Hoạt động');
+      await expectIdToHaveText('serviceNameMy Task', 'Vệ sinh máy lạnh');
+      await expectIdToHaveText('taskStatusMy Task', 'Chờ xác nhận');
+      await expectIdToHaveText('taskerName0', 'Tasker 01');
+      await tapId('taskMy Task');
+      await expectElementVisible('taskerTasker 01');
+      await tapText('Cập nhật');
+      await expectElementVisible('Đổi ngày giờ', 'text');
+      await selectTime24h(16);
+      await tapText('Đồng ý');
+      await tapId('btnUpdateDateTime');
+      await waitForElement('Cập nhật thời gian làm việc thành công.', 500, 'text');
+      await tapText('Đóng');
+      await tapId('taskMy Task');
+      await expectElementVisible( 'Đang chờ người nhận việc...', 'text');
+      await expectIdToHaveText('txtTaskDetail', 'Chi tiết công việc');
+      await expectIdToHaveText('quantityAC_Split', '1');
+    }
+  });
+
+  it('LINE 93 - Asker want to change task datetime - CONFIRMED', async () => {
+    if (device.getPlatform() === 'ios') {
+      await initData('task/createACTask', [
+        { ServiceName: 'Vệ sinh máy lạnh', AskerPhone: '0834567890', Description: 'My Task', Detail: 'Split,0,2,1,clean_gas,200000' },
+      ]);
+      await initData('task/updateTask', [
+        {Status: 'CONFIRMED', Description: 'My Task', AcceptedTasker: '0834567891'},
+      ]);
+      await tapText('Hoạt động');
+      await expectIdToHaveText('serviceNameMy Task', 'Vệ sinh máy lạnh');
+      await expectIdToHaveText('taskStatusMy Task', 'Xác nhận');
+      await tapId('taskMy Task');
+      await expectIdToHaveText('taskDetailTaskerName', 'Tasker 01');
+      await tapText('Cập nhật');
+      await expectElementVisible('Đổi ngày giờ', 'text');
+      await selectTime24h(16);
+      await tapText('Đồng ý');
+      await tapId('btnUpdateDateTime');
+      await waitForElement('Cập nhật thời gian làm việc thành công.', 500, 'text');
+      await tapText('Đóng');
+      await tapId('taskMy Task');
+      await expectElementVisible( 'Đang chờ người nhận việc...', 'text');
+      await expectIdToHaveText('txtTaskDetail', 'Chi tiết công việc');
+      await expectIdToHaveText('quantityAC_Split', '1');
+    }
+  });
+
+  // TODO fail
+  it.skip('LINE 100 - Asker want to change deep cleaning task time include promotion', async () => {
+    await initData('promotion/createPromotionCode', [
+      {
+        Code: 'abc123',
+        Value: 50000,
+        Target: 'ASKER',
+        TypeOfPromotion: 'NEW',
+        TypeOfValue: 'MONEY',
+        Limit: 100,
+        TaskStartDate: moment().toDate(),
+        TaskEndDate: moment().add(2, 'd').toDate()
+      },
+    ]);
+    await postTask('postTaskServiceAIR_CONDITIONER_SERVICE', 'Pham Van Nghi');
+    // post task step 1
+    await tapText('Máy lạnh tủ đứng');
+    await tapIdAtIndex('switchAC_Portable_Refill', 0);
+    await expectIdToHaveText('lbPrice', '450,000 VND/1h');
+    await tapId('btnNextStep2');
+    await tapId('btnNextStep3');
+    await tapText('Tiếp tục');
+    // POST TASK STEP 4
+    await swipe('scrollViewStep4', 'up');
+    await expectElementVisible('Máy lạnh tủ đứng');
+    await expectIdToHaveText('Máy lạnh tủ đứngQuantity', '1');
+    await expectIdToHaveText('Máy lạnh tủ đứngServices', 'Vệ sinh, Bơm Gas');
+    await expectIdToHaveText('price', '450,000 VND');
+    await waitForElement('promotionCode', 500);
+    await tapId('promotionCode');
+    await typePromotionCode('abc123');
+    await expectIdToHaveText('txtPromotionCode', 'abc123')
+    await tapText('Đăng việc');
+    await tapText('Theo dõi công việc');
+    // UPCOMING TASK
+    await expectIdToHaveText('serviceNameMy Task', 'Vệ sinh máy lạnh');
+    await expectIdToHaveText('notTaskerAccept0', 'Đang chờ người nhận việc');
+    await tapId('serviceNameMy Task');
+    // TASK DETAIL
+    await expectIdToHaveText('finalCost', '400,000 ₫');
+    await tapText('Cập nhật');
+    var nextDay = moment().add(3, 'd');
+    if (moment().add(1, 'd').date() !== 1 && moment().month() !== nextDay.month()) {
+    }
+    await tapId(String(nextDay.date()));
+    await expectIdToHaveText('lbPrice', '450,000 VND/1h');
+    await tapId('btnUpdateDateTime');
+    await waitForElement('Cập nhật thời gian làm việc thành công.', 500, 'text');
+    await tapText('Đóng');
+    const task = await initData('task/getTaskByDescription', {description: 'My Task'});
+    await expect(task.promotion).to.be.undefined;
+    await tapId('taskMy Task');
+    await expectIdToHaveText('txtTaskDetail', 'Chi tiết công việc');
+    await expectIdToHaveText('finalCost', '450,000 ₫');
+  });
+});
